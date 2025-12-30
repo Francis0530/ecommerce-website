@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jordan Store</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+body {
+    background: #f2f2f2;
+}
+
+/* ===== HEADER ===== */
+header {
+    background: #000;
+    color: #fff;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header h1 {
+    letter-spacing: 2px;
+}
+
+.cart-btn {
+    background: #c62828;
+    border: none;
+    padding: 10px 18px;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* ===== PRODUCTS ===== */
+.products {
+    padding: 40px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+}
+
+.product {
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.product:hover {
+    transform: translateY(-5px);
+}
+
+.product img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.product-details {
+    padding: 15px;
+    text-align: center;
+}
+
+.product-details h3 {
+    margin-bottom: 8px;
+}
+
+.price {
+    color: #c62828;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.product-details button {
+    margin-top: 12px;
+    padding: 10px;
+    width: 100%;
+    background: #000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+/* ===== CART ===== */
+.cart {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 360px;
+    height: 100%;
+    background: #fff;
+    padding: 20px;
+    box-shadow: -3px 0 15px rgba(0,0,0,0.3);
+    transition: 0.3s;
+    z-index: 999;
+}
+
+.cart.active {
+    right: 0;
+}
+
+.cart h2 {
+    margin-bottom: 20px;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.cart-item button {
+    background: #c62828;
+    color: #fff;
+    border: none;
+    padding: 4px 8px;
+    cursor: pointer;
+}
+
+.total {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.close-cart {
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px;
+    background: #000;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>JORDAN STORE</h1>
+    <button class="cart-btn" onclick="toggleCart()">Cart 🛒</button>
+</header>
+
+<section class="products">
+
+    <div class="product">
+        <img src="c:\Users\aejeb\OneDrive\Documents\e-commerce website\air-jordan-1-retro-high-og-mauve-dz5485-105-release-date-2.webp">
+        <div class="product-details">
+            <h3>Air Jordan 1 Retro</h3>
+            <div class="price">₱9,500</div>
+            <button onclick="addToCart('Air Jordan 1 Retro', 9500)">Add to Cart</button>
+        </div>
+    </div>
+
+    <div class="product">
+        <img src="C:\Users\aejeb\OneDrive\Documents\e-commerce website\jordan 4 bred.jpg">
+        <div class="product-details">
+            <h3>Air Jordan 4 Bred</h3>
+            <div class="price">₱12,000</div>
+            <button onclick="addToCart('Air Jordan 4 Bred', 12000)">Add to Cart</button>
+        </div>
+    </div>
+
+    <div class="product">
+        <img src="C:\Users\aejeb\OneDrive\Documents\e-commerce website\ir jordan 11 concord.webp">
+        <div class="product-details">
+            <h3>Air Jordan 11 Concord</h3>
+            <div class="price">₱14,500</div>
+            <button onclick="addToCart('Air Jordan 11 Concord', 14500)">Add to Cart</button>
+        </div>
+    </div>
+
+    <div class="product">
+        <img src="C:\Users\aejeb\OneDrive\Documents\e-commerce website\air-jordan-6-infrared-buying-guide-2.webp">
+        <div class="product-details">
+            <h3>Air Jordan 6 Infrared</h3>
+            <div class="price">₱11,800</div>
+            <button onclick="addToCart('Air Jordan 6 Infrared', 11800)">Add to Cart</button>
+        </div>
+    </div>
+
+</section>
+
+<!-- CART -->
+<div class="cart" id="cart">
+    <h2>Your Cart</h2>
+    <div id="cartItems"></div>
+    <div class="total">Total: ₱<span id="total">0</span></div>
+    <button class="close-cart" onclick="toggleCart()">Close</button>
+</div>
+
+<script>
+let cart = [];
+let total = 0;
+
+function toggleCart() {
+    document.getElementById("cart").classList.toggle("active");
+}
+
+function addToCart(name, price) {
+    cart.push({name, price});
+    total += price;
+    updateCart();
+}
+
+function removeItem(index) {
+    total -= cart[index].price;
+    cart.splice(index, 1);
+    updateCart();
+}
+
+function updateCart() {
+    const cartItems = document.getElementById("cartItems");
+    cartItems.innerHTML = "";
+
+    cart.forEach((item, index) => {
+        cartItems.innerHTML += `
+            <div class="cart-item">
+                <span>${item.name}</span>
+                <span>₱${item.price}</span>
+                <button onclick="removeItem(${index})">X</button>
+            </div>
+        `;
+    });
+
+    document.getElementById("total").innerText = total;
+}
+</script>
+
+</body>
+</html>
